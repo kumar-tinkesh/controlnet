@@ -24,10 +24,9 @@ pipe = StableDiffusionControlNetPipeline.from_pretrained(
 
 pipe.to(device)
 
-
 # Start Flask app
 app = Flask(__name__)
-run_with_ngrok(app)
+run_with_ngrok(app)  # Expose Flask app via ngrok
 
 @app.route('/')
 def initial():
@@ -56,5 +55,4 @@ def generate_image():
         print(f"Error: {e}")
         return render_template('index.html', error="Failed to generate image. Check server logs.")
 
-if __name__ == '__main__':
-    app.run()
+# In Flask with ngrok, no need to manually call app.run() as it's handled by ngrok
