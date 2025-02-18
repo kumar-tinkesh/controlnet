@@ -142,7 +142,7 @@ def generate_image():
         print(f"Generating an image for: {prompt}")
 
         # Image URL to be used for pose extraction
-        image_url = "https://hf.co/datasets/YiYiXu/controlnet-testing/resolve/main/yoga1.jpeg"
+        image_url = "https://www.desipainters.com/dp/05/20809/208091.jpg"
 
         # Generate images using the provided prompt and image URL
         images = generate_images(prompt, image_url)
