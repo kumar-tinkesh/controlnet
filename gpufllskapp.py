@@ -184,7 +184,7 @@ dtype = torch.float16 if device == "cuda" else torch.float32  # Adjust dtype
 app = Flask(__name__)
 
 # ngrok setup for public URL
-ngrok.set_auth_token("YOUR_NGROK_AUTH_TOKEN")  # Replace with your actual token
+ngrok.set_auth_token("2jK44YcMq9wfqWna2tpf4gkZxCY_24fLpcRmNfyZqQQhcyJ5M")  # Replace with your actual token
 public_url = ngrok.connect(5000).public_url
 print(f"Access the global link: {public_url}")
 
