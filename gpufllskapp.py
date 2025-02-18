@@ -4,6 +4,7 @@ import torch
 import base64
 from io import BytesIO
 from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
+from pyngrok import ngrok
 
 # Check if CUDA is available
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -23,15 +24,18 @@ pipe = StableDiffusionControlNetPipeline.from_pretrained(
 )
 
 pipe.to(device)
-
+port_no = 5000
 
 # Start Flask app
 app = Flask(__name__)
-run_with_ngrok(app)
+ngrok.set_auth_token("2jK44YcMq9wfqWna2tpf4gkZxCY_24fLpcRmNfyZqQQhcyJ5M")
+public_url =  ngrok.connect(port_no).public_url
 
 @app.route('/')
 def initial():
     return render_template('index.html')
+
+print(f"To acces the Gloable link please click {public_url}")
 
 @app.route('/submit-prompt', methods=['POST'])
 def generate_image():
@@ -57,4 +61,4 @@ def generate_image():
         return render_template('index.html', error="Failed to generate image. Check server logs.")
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=port_no)
