@@ -4,21 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Generator</title>
+    <style>
+        /* Center content */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        /* Loader styles */
+        .loader {
+            display: none; /* Hidden by default */
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('submit-btn').disabled = true; // Disable button to prevent multiple submissions
+        }
+    </script>
 </head>
 <body>
     <h1>Generate an Image with Your Prompt</h1>
-    <form method="POST" action="/submit-prompt">
+    
+    <form method="POST" action="/submit-prompt" onsubmit="showLoader()">
         <label for="prompt-input">Enter your prompt:</label>
         <input type="text" id="prompt-input" name="prompt-input" required>
-        <button type="submit">Generate Image</button>
+        <button type="submit" id="submit-btn">Generate Image</button>
     </form>
+
+    <!-- Loader -->
+    <div id="loader" class="loader"></div>
 
     {% if generated_image %}
         <h2>Generated Image:</h2>
         <img src="{{ generated_image }}" alt="Generated Image">
     {% endif %}
+    
     {% if error %}
-        <h2>Error: {{ error }}</h2>
+        <h2 style="color: red;">Error: {{ error }}</h2>
     {% endif %}
 </body>
 </html>
