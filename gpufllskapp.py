@@ -78,6 +78,8 @@ from diffusers import UniPCMultistepScheduler
 from PIL import Image
 from IPython.display import display
 from pyngrok import ngrok
+import requests
+from io import BytesIO
 
 # Check if CUDA is available
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -92,9 +94,10 @@ public_url = ngrok.connect(5000).public_url
 
 print(f"To access the global link, please click {public_url}")
 
-def generate_images(generate_prompt, model_id="runwayml/stable-diffusion-v1-5"):
-    # Use a placeholder input image for pose detection
-    input_image = Image.new("RGB", (512, 512), (255, 255, 255))  # Dummy white image
+def generate_images(generate_prompt, image_url, model_id="runwayml/stable-diffusion-v1-5"):
+    # Download the image from the provided URL
+    response = requests.get(image_url)
+    input_image = Image.open(BytesIO(response.content))
 
     # Load Openpose model for property extraction
     pose_model = OpenposeDetector.from_pretrained("lllyasviel/ControlNet")
@@ -138,8 +141,11 @@ def generate_image():
         prompt = request.form['prompt-input']
         print(f"Generating an image for: {prompt}")
 
-        # Generate images using the provided prompt
-        images = generate_images(prompt)
+        # Image URL to be used for pose extraction
+        image_url = "https://hf.co/datasets/YiYiXu/controlnet-testing/resolve/main/yoga1.jpeg"
+
+        # Generate images using the provided prompt and image URL
+        images = generate_images(prompt, image_url)
         print("Images generated! Converting to base64...")
 
         # Convert the first generated image to base64
