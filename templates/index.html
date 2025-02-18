@@ -3,58 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Generator</title>
+    <title>AI Image Generator</title>
     <style>
-        /* Center content */
+        /* Global Styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             text-align: center;
-            margin: 50px;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
         }
 
-        /* Loader styles */
-        .loader {
-            display: none; /* Hidden by default */
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #3498db;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
+        h1 {
+            margin-top: 20px;
+            font-size: 28px;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
             margin: 20px auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Input Field */
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        /* Button Styles */
+        button {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin-top: 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #e68900;
+        }
+
+        /* Loader Animation */
+        .loader {
+            display: none;
+            margin: 20px auto;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid #ff9800;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Image Result */
+        .image-container {
+            margin-top: 20px;
+        }
+
+        .generated-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Error Message */
+        .error {
+            color: #ff4c4c;
+            margin-top: 10px;
+            font-size: 18px;
+        }
     </style>
     <script>
         function showLoader() {
             document.getElementById('loader').style.display = 'block';
-            document.getElementById('submit-btn').disabled = true; // Disable button to prevent multiple submissions
+            document.getElementById('submit-btn').disabled = true; // Disable button during loading
         }
     </script>
 </head>
 <body>
-    <h1>Generate an Image with Your Prompt</h1>
-    
-    <form method="POST" action="/submit-prompt" onsubmit="showLoader()">
-        <label for="prompt-input">Enter your prompt:</label>
-        <input type="text" id="prompt-input" name="prompt-input" required>
-        <button type="submit" id="submit-btn">Generate Image</button>
-    </form>
+    <h1>AI Image Generator</h1>
 
-    <!-- Loader -->
-    <div id="loader" class="loader"></div>
+    <div class="form-container">
+        <form method="POST" action="/submit-prompt" onsubmit="showLoader()">
+            <label for="prompt-input">Enter Your Prompt:</label><br>
+            <input type="text" id="prompt-input" name="prompt-input" placeholder="e.g., A futuristic city at sunset" required>
+            <br>
+            <button type="submit" id="submit-btn">Generate Image</button>
+        </form>
+
+        <!-- Loader -->
+        <div id="loader" class="loader"></div>
+    </div>
 
     {% if generated_image %}
+    <div class="image-container">
         <h2>Generated Image:</h2>
-        <img src="{{ generated_image }}" alt="Generated Image">
+        <img src="{{ generated_image }}" alt="Generated Image" class="generated-image">
+    </div>
     {% endif %}
-    
+
     {% if error %}
-        <h2 style="color: red;">Error: {{ error }}</h2>
+        <h2 class="error">Error: {{ error }}</h2>
     {% endif %}
 </body>
 </html>
