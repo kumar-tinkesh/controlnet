@@ -142,7 +142,7 @@ def generate_image():
         print(f"Generating an image for: {prompt}")
 
         # Image URL to be used for pose extraction
-        image_url = "https://www.desipainters.com/dp/05/20809/208091.jpg"
+        image_url = "https://images.template.net/wp-content/uploads/2016/11/Nature-Drawing.png?width=530"
 
         # Generate images using the provided prompt and image URL
         images = generate_images(prompt, image_url)
