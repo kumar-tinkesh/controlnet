@@ -8,3 +8,4 @@ pyngrok
 flask_ngrok
 controlnet_aux
 IPython
+xformers
