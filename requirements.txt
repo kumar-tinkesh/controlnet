@@ -6,3 +6,5 @@ ftfy
 accelerate
 pyngrok
 flask_ngrok
+controlnet_aux
+IPython
