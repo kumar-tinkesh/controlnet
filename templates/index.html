@@ -109,12 +109,11 @@
     </script>
 </head>
 <body>
-    <h1>AI Image Generator</h1>
 
     <div class="form-container">
         <form method="POST" action="/submit-prompt" onsubmit="showLoader()">
             <label for="prompt-input">Enter Your Prompt:</label><br>
-            <input type="text" id="prompt-input" name="prompt-input" placeholder="e.g., A futuristic city at sunset" required>
+            <input type="text" id="prompt-input" name="prompt-input" placeholder="write prompt based on given image" required>
             <br>
             <button type="submit" id="submit-btn">Generate Image</button>
         </form>
