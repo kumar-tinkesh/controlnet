@@ -228,7 +228,7 @@ def generate_image():
         prompt = request.form['prompt-input']
         print(f"Generating an image for: {prompt}")
 
-        image_url = "https://img.freepik.com/free-vector/trees-plants-drawings_23-2147499551.jpg?t=st=1739951137~exp=1739954737~hmac=2bae2fc74293567d7123a17b1af9734af4eb757b8fcb0905fb12c249cbed095a&w=1060"
+        image_url = "https://img.freepik.com/free-vector/forest-park-alley-landscape-isolated-trees-silhouette_460848-14495.jpg?t=st=1739951156~exp=1739954756~hmac=124685a76817dd2722f40e139a07d3ed3d20ada1608e15a9e33ac128eefb9991&w=1380"
 
         generated_image = generate_image_from_reference(prompt, image_url)
 
