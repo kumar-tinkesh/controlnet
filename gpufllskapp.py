@@ -228,7 +228,7 @@ def generate_image():
         prompt = request.form['prompt-input']
         print(f"Generating an image for: {prompt}")
 
-        image_url = "https://img.freepik.com/free-vector/forest-park-alley-landscape-isolated-trees-silhouette_460848-14495.jpg?t=st=1739951156~exp=1739954756~hmac=124685a76817dd2722f40e139a07d3ed3d20ada1608e15a9e33ac128eefb9991&w=1380"
+        image_url = "https://cdn-lfs.hf.co/repos/78/0e/780e181e22f54ea1cfedf27b25482cdbb06bf28707d402dd7dd3687e4ec3e8b3/5dcb199dbfb5e1b046996d07798d26e1555cb3e8816299384377a9bc377af4f6?response-content-disposition=inline%3B+filename*%3DUTF-8%27%27starbucks_logo.jpeg%3B+filename%3D%22starbucks_logo.jpeg%22%3B&response-content-type=image%2Fjpeg&Expires=1739955943&Policy=eyJTdGF0ZW1lbnQiOlt7IkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTczOTk1NTk0M319LCJSZXNvdXJjZSI6Imh0dHBzOi8vY2RuLWxmcy5oZi5jby9yZXBvcy83OC8wZS83ODBlMTgxZTIyZjU0ZWExY2ZlZGYyN2IyNTQ4MmNkYmIwNmJmMjg3MDdkNDAyZGQ3ZGQzNjg3ZTRlYzNlOGIzLzVkY2IxOTlkYmZiNWUxYjA0Njk5NmQwNzc5OGQyNmUxNTU1Y2IzZTg4MTYyOTkzODQzNzdhOWJjMzc3YWY0ZjY%7EcmVzcG9uc2UtY29udGVudC1kaXNwb3NpdGlvbj0qJnJlc3BvbnNlLWNvbnRlbnQtdHlwZT0qIn1dfQ__&Signature=lnvLMCRaeGwhC5R8XppQnwTKa7IZHFsICX53DOE0GqGgySXTSZ1S0Fhfz-Hea09RG8TLGMeSA96ujBc2V73W2L%7ExPtTHObtBJNdqcGE08JlMDyB%7EEzz0ZbA78mGrxFrlgGsyK83rOhELfeB66kZTqDVTexIF8zaj-owz7scA6OSJP%7EZx72axstpnXojQiB4ivrug0KOIn9JcmmwnJUmF5PWSeyEfo0EMvgBBrgu7v49JSX3CSgNxRLLy759mN9eJwKU1vfHlBbn%7EsqyKXlG7-0WecmE%7EmpKH5ddedyOD9icW0ytf5MlfOnS5jGF-O69qgRg%7EkSOiYYEiqZ9xl5x7HA__&Key-Pair-Id=K3RPWS32NSSJCE"
 
         generated_image = generate_image_from_reference(prompt, image_url)
 
