@@ -104,7 +104,7 @@
     <script>
         function showLoader() {
             document.getElementById('loader').style.display = 'block';
-            document.getElementById('submit-btn').disabled = true; // Disable button during loading
+            document.getElementById('submit-btn').disabled = true;
         }
     </script>
 </head>
@@ -112,9 +112,15 @@
 
     <div class="form-container">
         <form method="POST" action="/submit-prompt" onsubmit="showLoader()">
+
+            <label for="image-url">Enter Image URL:</label><br>
+            <input type="text" id="image-url" name="image-url" placeholder="Paste the reference image URL" required>
+            <br><br>
+
             <label for="prompt-input">Enter Your Prompt:</label><br>
-            <input type="text" id="prompt-input" name="prompt-input" placeholder="write prompt based on given image" required>
-            <br>
+            <input type="text" id="prompt-input" name="prompt-input" placeholder="Write a prompt based on the image" required>
+            <br><br>
+
             <button type="submit" id="submit-btn">Generate Image</button>
         </form>
 
@@ -134,3 +140,4 @@
     {% endif %}
 </body>
 </html>
+
