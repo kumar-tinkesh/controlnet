@@ -228,7 +228,7 @@ def generate_image():
         prompt = request.form['prompt-input']
         print(f"Generating an image for: {prompt}")
 
-        image_url = "https://images.template.net/wp-content/uploads/2016/11/29093811/Waterfalls-Nature-Drawing.jpg?width=530"
+        image_url = "https://img.freepik.com/free-vector/trees-plants-drawings_23-2147499551.jpg?t=st=1739951137~exp=1739954737~hmac=2bae2fc74293567d7123a17b1af9734af4eb757b8fcb0905fb12c249cbed095a&w=1060"
 
         generated_image = generate_image_from_reference(prompt, image_url)
 
