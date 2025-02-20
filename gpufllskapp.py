@@ -175,6 +175,7 @@ from io import BytesIO
 from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
 from PIL import Image
 import os
+from pyngrok import ngrok
 
 # Check if CUDA is available
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -184,6 +185,10 @@ dtype = torch.float16 if device == "cuda" else torch.float32  # Adjust dtype
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "uploads"
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+ngrok.set_auth_token("2jK44YcMq9wfqWna2tpf4gkZxCY_24fLpcRmNfyZqQQhcyJ5M")  # Replace with your actual token
+public_url = ngrok.connect(5000).public_url
+print(f"Access the global link: {public_url}")
 
 # Load the ControlNet model
 controlnet = ControlNetModel.from_pretrained(
