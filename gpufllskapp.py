@@ -167,6 +167,7 @@
 
 # text-to-image generation ------------------------------------------------------------------------------------------------
 
+
 from flask import Flask, render_template, request
 import torch
 import base64
@@ -174,7 +175,6 @@ import requests
 from io import BytesIO
 from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
 from PIL import Image
-import os
 from pyngrok import ngrok
 
 # Check if CUDA is available
@@ -183,12 +183,12 @@ dtype = torch.float16 if device == "cuda" else torch.float32  # Adjust dtype
 
 # Initialize Flask app
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = "uploads"
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-ngrok.set_auth_token("2jK44YcMq9wfqWna2tpf4gkZxCY_24fLpcRmNfyZqQQhcyJ5M")  # Replace with your actual token
+# Ask user for ngrok authentication token
+ngrok_token = input("Enter your ngrok authentication token: ")
+ngrok.set_auth_token(ngrok_token)  # Set user-provided token
 public_url = ngrok.connect(5000).public_url
-print(f"Access the global link: {public_url}")
+print(f"Access your application at: {public_url}")
 
 # Load the ControlNet model
 controlnet = ControlNetModel.from_pretrained(
@@ -201,21 +201,20 @@ pipeline = StableDiffusionControlNetPipeline.from_pretrained(
 ).to(device)
 
 
-def load_image(image_path):
-    return Image.open(image_path).convert("RGB")
+def load_image_from_url(url):
+    """Download image from a URL and convert it to RGB."""
+    response = requests.get(url)
+    return Image.open(BytesIO(response.content)).convert("RGB")
 
 
-def generate_image_from_reference(prompt, image_path):
-    input_image = load_image(image_path)  # Load user-uploaded image
-
+def generate_image_from_reference(prompt, image):
+    """Generate an image based on a reference image and user prompt."""
     output = pipeline(
         prompt=prompt,
-        image=input_image,
+        image=image,
         negative_prompt="blurry, low quality, distorted",
     )
-
-    generated_image = output.images[0]
-    return generated_image
+    return output.images[0]
 
 
 @app.route('/')
@@ -227,15 +226,13 @@ def initial():
 def generate_image():
     try:
         prompt = request.form['prompt-input']
-        uploaded_file = request.files['image-file']
+        image_url = request.form['image-url']
 
-        if not uploaded_file:
-            return render_template('index.html', error="No file uploaded.")
+        print(f"Generating an image for: {prompt}")
+        print(f"Using reference image from: {image_url}")
 
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-        uploaded_file.save(file_path)
-
-        generated_image = generate_image_from_reference(prompt, file_path)
+        input_image = load_image_from_url(image_url)  # Load user-provided image URL
+        generated_image = generate_image_from_reference(prompt, input_image)
 
         # Convert generated image to base64
         buffered = BytesIO()
@@ -243,7 +240,7 @@ def generate_image():
         img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
         img_str = f"data:image/png;base64,{img_str}"
 
-        print("Sending image...")
+        print("Sending generated image to frontend...")
         return render_template('index.html', generated_image=img_str)
 
     except Exception as e:
@@ -252,4 +249,4 @@ def generate_image():
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=5000)
