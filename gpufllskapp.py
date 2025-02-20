@@ -174,7 +174,7 @@ import requests
 from io import BytesIO
 from diffusers import StableDiffusionControlNetPipeline, ControlNetModel
 from PIL import Image
-from pyngrok import ngrok
+import os
 
 # Check if CUDA is available
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -182,11 +182,8 @@ dtype = torch.float16 if device == "cuda" else torch.float32  # Adjust dtype
 
 # Initialize Flask app
 app = Flask(__name__)
-
-# ngrok setup for public URL
-ngrok.set_auth_token("2jK44YcMq9wfqWna2tpf4gkZxCY_24fLpcRmNfyZqQQhcyJ5M")  # Replace with your actual token
-public_url = ngrok.connect(5000).public_url
-print(f"Access the global link: {public_url}")
+app.config['UPLOAD_FOLDER'] = "uploads"
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Load the ControlNet model
 controlnet = ControlNetModel.from_pretrained(
@@ -199,13 +196,12 @@ pipeline = StableDiffusionControlNetPipeline.from_pretrained(
 ).to(device)
 
 
-def load_image(url):
-    response = requests.get(url)
-    return Image.open(BytesIO(response.content)).convert("RGB")
+def load_image(image_path):
+    return Image.open(image_path).convert("RGB")
 
 
-def generate_image_from_reference(prompt, image_url):
-    input_image = load_image(image_url)  # Load reference image
+def generate_image_from_reference(prompt, image_path):
+    input_image = load_image(image_path)  # Load user-uploaded image
 
     output = pipeline(
         prompt=prompt,
@@ -226,11 +222,15 @@ def initial():
 def generate_image():
     try:
         prompt = request.form['prompt-input']
-        print(f"Generating an image for: {prompt}")
+        uploaded_file = request.files['image-file']
 
-        image_url = "https://cdn-lfs.hf.co/repos/78/0e/780e181e22f54ea1cfedf27b25482cdbb06bf28707d402dd7dd3687e4ec3e8b3/5dcb199dbfb5e1b046996d07798d26e1555cb3e8816299384377a9bc377af4f6?response-content-disposition=inline%3B+filename*%3DUTF-8%27%27starbucks_logo.jpeg%3B+filename%3D%22starbucks_logo.jpeg%22%3B&response-content-type=image%2Fjpeg&Expires=1739955943&Policy=eyJTdGF0ZW1lbnQiOlt7IkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTczOTk1NTk0M319LCJSZXNvdXJjZSI6Imh0dHBzOi8vY2RuLWxmcy5oZi5jby9yZXBvcy83OC8wZS83ODBlMTgxZTIyZjU0ZWExY2ZlZGYyN2IyNTQ4MmNkYmIwNmJmMjg3MDdkNDAyZGQ3ZGQzNjg3ZTRlYzNlOGIzLzVkY2IxOTlkYmZiNWUxYjA0Njk5NmQwNzc5OGQyNmUxNTU1Y2IzZTg4MTYyOTkzODQzNzdhOWJjMzc3YWY0ZjY%7EcmVzcG9uc2UtY29udGVudC1kaXNwb3NpdGlvbj0qJnJlc3BvbnNlLWNvbnRlbnQtdHlwZT0qIn1dfQ__&Signature=lnvLMCRaeGwhC5R8XppQnwTKa7IZHFsICX53DOE0GqGgySXTSZ1S0Fhfz-Hea09RG8TLGMeSA96ujBc2V73W2L%7ExPtTHObtBJNdqcGE08JlMDyB%7EEzz0ZbA78mGrxFrlgGsyK83rOhELfeB66kZTqDVTexIF8zaj-owz7scA6OSJP%7EZx72axstpnXojQiB4ivrug0KOIn9JcmmwnJUmF5PWSeyEfo0EMvgBBrgu7v49JSX3CSgNxRLLy759mN9eJwKU1vfHlBbn%7EsqyKXlG7-0WecmE%7EmpKH5ddedyOD9icW0ytf5MlfOnS5jGF-O69qgRg%7EkSOiYYEiqZ9xl5x7HA__&Key-Pair-Id=K3RPWS32NSSJCE"
+        if not uploaded_file:
+            return render_template('index.html', error="No file uploaded.")
 
-        generated_image = generate_image_from_reference(prompt, image_url)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+        uploaded_file.save(file_path)
+
+        generated_image = generate_image_from_reference(prompt, file_path)
 
         # Convert generated image to base64
         buffered = BytesIO()
@@ -247,4 +247,4 @@ def generate_image():
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5000, debug=True)
